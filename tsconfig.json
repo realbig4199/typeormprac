@@ -8,6 +8,6 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true // index.ts에서 import * as express from 'express'; 를 사용할 수 있게 해줌
   }
 }

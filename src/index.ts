@@ -21,6 +21,8 @@ app.get("/", (req, res) => {
 });
 
 // 데이터베이스 연결
+// data-source.ts에서 만든 AppDataSource를 사용하여 데이터베이스 연결
+// initialize 메서드를 사용하여 데이터베이스 연결
 AppDataSource.initialize()
   .then(() => {
     console.log("데이터베이스 연결 성공");
