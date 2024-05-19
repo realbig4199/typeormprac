@@ -1,0 +1,16 @@
+# 도커 허브에 많은 이미지들이 있음
+# 이 이미지들을 도커 컨테이너로 가져와서 사용할 수 있음
+# 도커 컨테이너란 도커 이미지를 실행한 애플리케이션 실행 환경을 의미
+version: "3"
+services:
+  db:
+    image: postgres:latest # posgres 최신 버전 이미지를 사용
+    container_name: postgres_typeorm_container # 컨테이너 이름 설정
+    restart: always # 컨테이너가 꺼지면 다시 켜지도록 설정
+    ports:
+      - "5432:5432" # 호스트(내 컴퓨터, 도커가 실행되고 있는 컴퓨터)의 5432 포트와 컨테이너의 5432 포트를 연결 (전자가 외부 포트, 후자가 컨테이너 포트)
+    environment: # 환경 변수 설정
+      POSTGRES_USER: "postgres" # data-source.ts에서 설정한 username과 동일해야 함
+      POSTGRES_PASSWORD: "password" # data-source.ts에서 설정한 password와 동일해야 함
+    volumes: # 컨테이너와 호스트의 디렉토리(경로)를 연결 (데이터를 내 컴퓨터에 저장)
+      - ./data:/var/lib/postgresql/data # 호스트(내 컴퓨터, 도커가 실행되고 있는 컴퓨터)의 data 디렉토리와 컨테이너의 /var/lib/postgresql/data 디렉토리를 연결

@@ -2,7 +2,10 @@
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
+// AppDataSource를 import
 import { AppDataSource } from "./data-source";
+// 엔티티 임포트
+import { User } from "./entity/User";
 
 // 환경 변수 로드
 dotenv.config();
@@ -30,6 +33,44 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error(err);
   });
+
+// CRUD API
+// Create(생성) - POST
+app.post("/users", async (req, res) => {
+  const user = await AppDataSource.getRepository(User).create(req.body);
+  console.log(user);
+  // console.log(`입력된 데이터 : ${JSON.stringify(user)}`); // JSON.stringify로 객체를 문자열로 변환하여 출력
+  const results = await AppDataSource.getRepository(User).save(user);
+  return res.send(results);
+});
+
+// Read(조회) - GET
+// 전체 조회
+app.get("/users", async (req, res) => {
+  const users = await AppDataSource.getRepository(User).find();
+  return res.json(users);
+});
+// ID로 조회
+app.get("/users/:id", async (req, res) => {
+  const user = await AppDataSource.getRepository(User).findOneBy({ id: Number(req.params.id) });
+  return res.json(user);
+});
+
+// Update(수정) - PUT
+app.put("/users/:id", async (req, res) => {
+  const user = await AppDataSource.getRepository(User).findOneBy({ id: Number(req.params.id) });
+  AppDataSource.getRepository(User).merge(user, req.body);
+  const result = await AppDataSource.getRepository(User).save(user);
+  return res.json(result);
+});
+
+// Delete(삭제) - DELETE
+app.delete("/users/:id", async (req, res) => {
+  // const user = await AppDataSource.getRepository(User).findOneBy({ id: Number(req.params.id) });
+  // const result = await AppDataSource.getRepository(User).remove(user);
+  const result = await AppDataSource.getRepository(User).delete(req.params.id);
+  return res.json(result);
+});
 
 // 서버 실행
 const port = process.env.PORT || 4000;
